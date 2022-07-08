@@ -55,7 +55,7 @@ class Error:
         # Get the indicator
         indicator = self.make_indicator()
         # Make the string representation
-        error = f"\n{self.name}: in file \"{self.pos1.file_info.path}\""
+        error = f"\n{self.name}: in file \"{self.pos1.file_info.path}\" "
         error += f"at line {self.pos1.line}, column {self.pos1.col}:"
         error += f"{self.get_line()}\t{indicator}\n{self.desc}"
         return error

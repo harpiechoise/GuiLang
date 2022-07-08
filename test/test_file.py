@@ -1,15 +1,18 @@
 from lib.file import FileInfo, TextContainer
+
+
 def test_file_string_repr():
     # Test that the string representation of a file is the path
     f = FileInfo('test', 'test.mg')
     s = str(f)
     assert "FileInfo(name='test', path='test.mg')" == s
-    
+
+
 def test_file_container():
     # Test that the text container is correctly initialized
     f = FileInfo('test', 'test.mg')
     t = TextContainer('test', f)
-    
+
     assert 'test' == t.text
     assert 'test.mg' == t.file_info.path
     assert -1 == t.index
@@ -21,17 +24,19 @@ def test_file_container():
     t.advance()
     t.advance()
     # Test EOF
-    assert None == t.advance()
+    assert None is t.advance()
     assert t.EOF()
-    
+
+
 def test_advance_line():
     f = FileInfo('test', 'test.mg')
     t = TextContainer('a\nest', f)
     assert 'a' == t.advance()
     assert "\n" == t.advance()
-    
+
     assert t.line == 2
-    
+
+
 def test_text_container_copy():
     f = FileInfo('test', 'test.mg')
     t = TextContainer('test', f)

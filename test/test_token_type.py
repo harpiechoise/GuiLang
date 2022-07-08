@@ -1,5 +1,6 @@
 from lib.token_types import TokenType
 
+
 def test_token_type():
     # Test string representation of token type
     assert "INT" == str(TokenType.INT)

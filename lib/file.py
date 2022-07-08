@@ -55,7 +55,7 @@ class TextContainer:
         return a
 
     def EOF(self):
-        """Check if the index is at the end of the file."""
+        """Check if the sindex is at the end of the file."""
         # Check the end of the file
         if self.index >= len(self.text)-1:
             return True

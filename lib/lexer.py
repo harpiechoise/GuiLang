@@ -7,7 +7,7 @@ from lib.error import UnrecognizedTokenError
 import string
 
 
-class Parser:
+class Lexer:
     """Responsible for generating the tokens from the input file.
        All the tokens error are handled by the parser."""
 

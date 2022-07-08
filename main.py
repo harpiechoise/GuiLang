@@ -9,7 +9,7 @@ filename = PATH.split('\\')[-1].split('.')[0]
 
 file = lib.FileInfo(filename, PATH)
 
-parser = lib.Parser(data, file)
+parser = lib.Lexer(data, file)
 
 tokens, errors = parser.parse()
 if errors:
