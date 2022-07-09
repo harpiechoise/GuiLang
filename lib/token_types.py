@@ -8,6 +8,9 @@ class TokenType(Enum):
     INT = "INT"
     FLOAT = "FLOAT"
     CONSTRAINT = "CONSTRAINT"
+    LPAREN = "LPAREN"
+    RPAREN = "RPAREN"
+    COMMA = "COMMA"
 
     def __str__(self):
         """Represent the token as string."""

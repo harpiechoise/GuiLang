@@ -1,52 +1,56 @@
+"""Test file utils."""
 from lib.file import FileInfo, TextContainer
 
 
 def test_file_string_repr():
+    """Test the file string representation."""
     # Test that the string representation of a file is the path
-    f = FileInfo('test', 'test.mg')
-    s = str(f)
-    assert "FileInfo(name='test', path='test.mg')" == s
-
+    file = FileInfo('test', 'test.mg')
+    str_file = str(file)
+    assert "FileInfo(name='test', path='test.mg')" == str_file
 
 def test_file_container():
+    """Test file container."""
     # Test that the text container is correctly initialized
-    f = FileInfo('test', 'test.mg')
-    t = TextContainer('test', f)
+    file_ = FileInfo('test', 'test.mg')
+    text_container = TextContainer('test', file_)
 
-    assert 'test' == t.text
-    assert 'test.mg' == t.file_info.path
-    assert -1 == t.index
-    assert -1 == t.col
-    assert 1 == t.line
-    assert "t" == t.advance()
+    assert 'test' == text_container.text
+    assert 'test.mg' == text_container.file_info.path
+    assert -1 == text_container.index
+    assert -1 == text_container.col
+    assert 1 == text_container.line
+    assert "t" == text_container.advance()
     # Test that the text container is correctly advanced
-    t.advance()
-    t.advance()
-    t.advance()
+    text_container.advance()
+    text_container.advance()
+    text_container.advance()
     # Test EOF
-    assert None is t.advance()
-    assert t.EOF()
+    assert None is text_container.advance()
+    assert text_container.eof()
 
 
 def test_advance_line():
-    f = FileInfo('test', 'test.mg')
-    t = TextContainer('a\nest', f)
-    assert 'a' == t.advance()
-    assert "\n" == t.advance()
+    """Test the advance method"""
+    file_ = FileInfo('test', 'test.mg')
+    text_container = TextContainer('a\nest', file_)
+    assert 'a' == text_container.advance()
+    assert "\n" == text_container.advance()
 
-    assert t.line == 2
+    assert text_container.line == 2
 
 
 def test_text_container_copy():
-    f = FileInfo('test', 'test.mg')
-    t = TextContainer('test', f)
-    t.advance()
-    t2 = t.copy()
-    assert id(t) != id(t2)
-    assert t.text == t2.text
-    assert t.file_info.path == t2.file_info.path
-    assert t.index == t2.index
-    assert t.col == t2.col
-    assert t.line == t2.line
-    assert t.EOF() == t2.EOF()
-    assert id(t.file_info) == id(t2.file_info)
+    """Test file container copy method."""
+    file_ = FileInfo('test', 'test.mg')
+    text_container = TextContainer('test', file_)
+    text_container.advance()
+    text_container_copy = text_container.copy()
+    assert id(text_container) != id(text_container_copy)
+    assert text_container.text == text_container_copy.text
+    assert text_container.file_info.path == text_container_copy.file_info.path
+    assert text_container.index == text_container_copy.index
+    assert text_container.col == text_container_copy.col
+    assert text_container.line == text_container_copy.line
+    assert text_container.eof() == text_container_copy.eof()
+    assert id(text_container.file_info) == id(text_container_copy.file_info)

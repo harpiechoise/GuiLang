@@ -29,7 +29,7 @@ class TextContainer:
     def advance(self):
         """Advance the position of the index, column, and line."""
         # Check the eof
-        if self.EOF():
+        if self.eof():
             # None comunicates to the parses that the end of the file was
             # reached
             return None
@@ -48,13 +48,13 @@ class TextContainer:
     def copy(self):
         """Generate a copy of the TextContainer."""
         # Make a new instance of self
-        a = TextContainer(self.text, self.file_info)
-        a.index = self.index
-        a.col = self.col
-        a.line = self.line
-        return a
+        copy_instance = TextContainer(self.text, self.file_info)
+        copy_instance.index = self.index
+        copy_instance.col = self.col
+        copy_instance.line = self.line
+        return copy_instance
 
-    def EOF(self):
+    def eof(self):
         """Check if the sindex is at the end of the file."""
         # Check the end of the file
         if self.index >= len(self.text)-1:

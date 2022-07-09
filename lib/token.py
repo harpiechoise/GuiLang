@@ -10,10 +10,12 @@ class Token:
 
     type: Any
     value: str
+    pos_start: Any
+    pos_end: Any
 
     def __str__(self):
         """Represent the token as string."""
-        return f"{self.type}(value={self.value})"
+        return f"{self.type}(value=\"{self.value}\")"
 
     def __repr__(self):
         """Represent the token as internal string."""

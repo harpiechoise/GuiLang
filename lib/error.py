@@ -30,8 +30,8 @@ class Error:
             str: The line in the original file where the error occurred.
         """
         # Open the the file and read lines
-        with open(self.pos1.file_info.path, 'r') as f:
-            lines = f.readlines()
+        with open(self.pos1.file_info.path, 'r', encoding="utf8") as file_:
+            lines = file_.readlines()
         # Get the specific line of the error
         return f"\n\t{lines[self.pos1.line-1]}\n"
 
@@ -43,12 +43,12 @@ class Error:
                 as the error (^^^).
         """
         # Get the length of the error
-        dx = self.pos2.col - self.pos1.col
+        error_lenght = abs(self.pos2.col - self.pos1.col)
         # If the error is at the start of the line, the indicator is shorter
-        if dx == 1 or self.pos1.col == 0:
-            return " "*(self.pos1.col) + "^"*(dx)
+        if error_lenght == 1 or self.pos1.col == 0:
+            return " "*(self.pos1.col) + "^"*(error_lenght)
         # Genetate the indicator
-        return " "*(self.pos1.col) + "^"*(dx+1)
+        return " "*(self.pos1.col) + "^"*(error_lenght+1)
 
     def __str__(self):
         """Get the string representation of the error."""

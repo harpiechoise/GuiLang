@@ -1,31 +1,32 @@
+"""Modulo para probar los errores."""
 from lib.error import UnrecognizedTokenError
 from lib.file import TextContainer, FileInfo
 
-
 def test_error_string():
-    t = TextContainer('test', FileInfo('test', 'test.mg'))
-    p1 = t.copy()
-    t.advance()
-    p2 = t.copy()
-    e = UnrecognizedTokenError('test', p1, p2)
+    """Test the error module"""
+    text = TextContainer('test', FileInfo('test', 'test.mg'))
+    pos1 = text.copy()
+    text.advance()
+    pos2 = text.copy()
+    error = UnrecognizedTokenError('test', pos1, pos2)
     assert ("\nUnrecognizedTokenError: in file \"test.mg\""
             " at line 1, column -1:\n\ttest\n\t^"
-            "\nUnrecognized token: \"test\"") == str(e)
-    assert e.make_indicator() == "^"
+            "\nUnrecognized token: \"test\"") == str(error)
+    assert error.make_indicator() == "^"
     assert ("\nUnrecognizedTokenError: in file \"test.mg\" "
             "at line 1, column -1:\n\ttest\n\t^\nUnrecognized "
-            "token: \"test\"") == repr(e)
+            "token: \"test\"") == repr(error)
 
-    t = TextContainer('test', FileInfo('test', 'test.mg'))
+    text = TextContainer('test', FileInfo('test', 'test.mg'))
 
-    t.advance()
-    t.advance()
+    text.advance()
+    text.advance()
 
-    p3 = t.copy()
-    t.advance()
-    t.advance()
-    t.advance()
+    pos3 = text.copy()
+    text.advance()
+    text.advance()
+    text.advance()
 
-    p4 = t.copy()
-    e = UnrecognizedTokenError('test', p3, p4)
-    assert e.make_indicator() == " ^^^"
+    pos4 = text.copy()
+    error = UnrecognizedTokenError('test', pos3, pos4)
+    assert error.make_indicator() == " ^^^"

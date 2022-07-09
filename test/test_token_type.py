@@ -1,7 +1,9 @@
+"""Token types testing."""
 from lib.token_types import TokenType
 
 
 def test_token_type():
+    """Test the token types."""
     # Test string representation of token type
     assert "INT" == str(TokenType.INT)
     assert "FLOAT" == str(TokenType.FLOAT)

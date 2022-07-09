@@ -1,18 +1,22 @@
+"""Main testing file"""
 import lib
 
 PATH = './gui.mg'
 
-with open(PATH, 'r') as f:
+with open(PATH, 'r', encoding='utf8') as f:
     data = f.read()
 
-filename = PATH.split('\\')[-1].split('.')[0]
+filename = PATH.rsplit('\\', maxsplit=1)[-1].split('.')[0]
 
 file = lib.FileInfo(filename, PATH)
 
-parser = lib.Lexer(data, file)
+lexer = lib.Lexer(data, file)
 
-tokens, errors = parser.parse()
+tokens, errors = lexer.parse()
+parser = lib.Parser(tokens)
+tree = parser.parse()
+
 if errors:
     print(errors)
 else:
-    print(tokens)
+    print(tree)

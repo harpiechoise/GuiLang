@@ -1,1 +1,2 @@
-!!AAAAAA!!!!MEPINCHE 200 200.1 wacom
+windows(200, 200.1)
+window(200, 100)

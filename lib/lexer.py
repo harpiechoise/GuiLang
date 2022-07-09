@@ -1,10 +1,10 @@
 """Generate the tokens from an input file."""
 
+import string
 from lib.file import TextContainer
 from lib.token import Token
 from lib.token_types import TokenType
 from lib.error import UnrecognizedTokenError
-import string
 
 
 class Lexer:
@@ -29,15 +29,27 @@ class Lexer:
         while self.current_char is not None:
             # If the char is digit, it is a number
             if self.current_char.isdigit():
-                tokens.append(self.parse_number())
+                tokens.append(self.parse_number(self.text.copy()))
             # We ignore the spaces
-            elif self.current_char in " \t":
+            elif self.current_char in " \t\n":
                 self.advance()
                 continue
             # If the char is a letter, it is a constraint
             elif self.current_char in string.ascii_letters:
-                token = self.parse_constraint()
+                token = self.parse_constraint(self.text.copy)
                 tokens.append(token)
+            # If the char is a parenthesis, add it to the tokens
+
+            elif self.current_char in "()":
+                if self.current_char == '(':
+                    tokens.append(Token(TokenType.LPAREN, "(", self.text.copy(), self.text.copy()))
+                if self.current_char == ')':
+                    tokens.append(Token(TokenType.RPAREN, ")", self.text.copy(), self.text.copy()))
+                self.advance()
+
+            elif self.current_char == ',':
+                tokens.append(Token(TokenType.COMMA, ",", self.text.copy(), self.text.copy()))
+                self.advance()
 
             else:
                 # If the token was not recognized,
@@ -47,11 +59,10 @@ class Lexer:
                 return [], UnrecognizedTokenError(token,
                                                   position_initial,
                                                   self.text.copy())
-            # Advance the index
-            self.advance()
+
         return tokens, None
 
-    def parse_constraint(self):
+    def parse_constraint(self, starting_position):
         """Parse the constraints strings."""
         # Constraints ends with an space
         constraint = ""
@@ -60,9 +71,9 @@ class Lexer:
             # constraint
             constraint += self.current_char
             self.advance()
-            if self.current_char == ' ' or self.current_char is None:
+            if self.current_char not in string.ascii_letters:
                 break
-        return Token(TokenType.CONSTRAINT, constraint)
+        return Token(TokenType.CONSTRAINT, constraint, starting_position, self.text.copy())
 
     def parse_unrecognized_token(self):
         """If the token is not recognized, advance the index to the end
@@ -76,13 +87,12 @@ class Lexer:
             self.advance()
         return token
 
-    def parse_number(self):
+    def parse_number(self, starting_position):
         """Parse a float or an integer token."""
         point_count = 0
         number = ""
         while self.current_char is not None\
                 and (self.current_char.isdigit() or self.current_char == '.'):
-
             # A number with two periods is invalid
             if point_count > 1:
                 # TODO: Invalid float error
@@ -94,9 +104,9 @@ class Lexer:
             number += self.current_char
             self.advance()
         if point_count == 0:
-            return Token(TokenType.INT, number)
+            return Token(TokenType.INT, number, starting_position, self.text.copy())
         else:
-            return Token(TokenType.FLOAT, number)
+            return Token(TokenType.FLOAT, number, starting_position, self.text.copy())
 
     def advance(self):
         """Advance the index, col and line of the TextContainer."""
