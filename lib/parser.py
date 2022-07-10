@@ -1,6 +1,6 @@
 """Parser for .sgui files."""
 from abc import ABC, abstractmethod
-
+from lib.error import NotANodeError
 from lib.token_types import TokenType
 
 
@@ -68,6 +68,7 @@ class TupleNode(NodeBase):
         self.token = tokens
         self.values = []
         self.count = 0
+        self.error = None
         self.evaluate()
 
     def evaluate(self):
@@ -77,8 +78,9 @@ class TupleNode(NodeBase):
             if hasattr(node, "evaluate"):
                 self.values.append(node.evaluate())
             else:
-                # TODO: Not a node error
-                print("Not a node")
+                self.error = NotANodeError(node.token.value,
+                                           node.token.pos_start,
+                                           node.token.pos_end)
         return self
 
     def __repr__(self):
@@ -143,12 +145,14 @@ class Parser:
                 self.advance()
                 if self.current_token.type == TokenType.LPAREN:
                     args = self.parse_tuple()
+                    if args.error:
+                        return [], args.error
                 else:
                     # TODO: Handle constraint without arguments
                     print("Constraint without arguments")
                 constraint = ConstraintNode(constraint_token, args)
                 self.parse_tree.append(constraint)
-        return self.parse_tree
+        return self.parse_tree, ""
 
     def parse_terms(self, term):
         """Parse a term

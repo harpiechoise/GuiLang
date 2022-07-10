@@ -4,7 +4,8 @@ import string
 from lib.file import TextContainer
 from lib.token import Token
 from lib.token_types import TokenType
-from lib.error import UnrecognizedTokenError
+from lib.error import (UnrecognizedTokenError,
+                       InvalidFloatError)
 
 
 class Lexer:
@@ -29,7 +30,10 @@ class Lexer:
         while self.current_char is not None:
             # If the char is digit, it is a number
             if self.current_char.isdigit():
-                tokens.append(self.parse_number(self.text.copy()))
+                number_token, errors = self.parse_number(self.text.copy())
+                if errors:
+                    return [], errors
+                tokens.append(number_token)
             # We ignore the spaces
             elif self.current_char in " \t\n":
                 self.advance()
@@ -95,18 +99,29 @@ class Lexer:
                 and (self.current_char.isdigit() or self.current_char == '.'):
             # A number with two periods is invalid
             if point_count > 1:
-                # TODO: Invalid float error
-                raise Exception("Invalid number")
+                # Do-While to parse entire number
+                number += self.current_char
+                while True:
+                    if not self.current_char.isdigit() or\
+                        self.current_char != ".":
+                            break
+                    print(self.current_char)
+                    self.advance()
+                # Create the error class
+                error = InvalidFloatError(starting_position,
+                                        self.text.copy(), number)
+                return "", error
             if self.current_char == '.':
                 # If the char is a point, we count it
                 point_count += 1
             # Build the number
             number += self.current_char
             self.advance()
+
         if point_count == 0:
-            return Token(TokenType.INT, number, starting_position, self.text.copy())
+            return Token(TokenType.INT, number, starting_position, self.text.copy()), ""
         else:
-            return Token(TokenType.FLOAT, number, starting_position, self.text.copy())
+            return Token(TokenType.FLOAT, number, starting_position, self.text.copy()), ""
 
     def advance(self):
         """Advance the index, col and line of the TextContainer."""

@@ -14,9 +14,10 @@ lexer = lib.Lexer(data, file)
 
 tokens, errors = lexer.parse()
 parser = lib.Parser(tokens)
-tree = parser.parse()
+tree, errors = parser.parse()
 
 if errors:
     print(errors)
 else:
     print(tree)
+    

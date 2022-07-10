@@ -1,5 +1,4 @@
 """Test the parser file"""
-import os
 from lib.parser import IntNode, FloatNode, ConstraintNode, TupleNode
 from lib.token import Token
 from lib.token_types import TokenType
@@ -31,6 +30,7 @@ def test_nodes():
     assert node.args == args
     assert len(args.values) == 2
     assert args.values == [node_int, node_float]
+    assert args.error is None
 
     assert str(node) ==\
         ("ConstraintNode(value='window'"
@@ -67,14 +67,12 @@ def test_parser():
     token_1 = Token(TokenType.INT, "100", lexer.text.copy(), lexer.text.copy())
     node_1 = IntNode(token_1)
 
-    token_2 = Token(TokenType.INT, "100", lexer.text.copy(), lexer.text.copy())
-    node_2 = IntNode(token_2)
-    tree = parser.parse()
+    tree,_ = parser.parse()
     args = TupleNode([
             node_1,
         ]
     )
-    
+
     args.evaluate()
     node = ConstraintNode(Token(TokenType.CONSTRAINT, 'window',
                                 lexer.text.copy(),

@@ -82,3 +82,14 @@ class UnrecognizedTokenError(Error):
         # Initalize the error base class with the specific error name and desc
         super().__init__("UnrecognizedTokenError",
                          f"Unrecognized token: \"{token}\"", pos1, pos2)
+
+class InvalidFloatError(Error):
+    """Error for invalid float point values"""
+    def __init__(self, pos1, pos2, value):
+        super().__init__("Invalid Floating Point Value",
+                         f"Invalid float value: \"{value}\"", pos1, pos2)
+
+class NotANodeError(Error):
+    """Error for node bad dtype"""
+    def __init__(self, value, pos1, pos2):
+        super().__init__("NotANodeError", f"Value {value} isn't a Node", pos1, pos2)
